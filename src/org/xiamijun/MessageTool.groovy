@@ -13,11 +13,12 @@ class MessageTool {
             http.setDoOutput(true)
             http.setRequestMethod('POST')
             http.setRequestProperty('Content-Type', 'application/json')
-            try (OutputStream outputStream = http.getOutputStream()) {
+            try {
+                OutputStream outputStream = http.getOutputStream()
                 byte[] inputBytes = json.getBytes('UTF-8')
                 outputStream.write(inputBytes)
                 outputStream.flush()
-            }
+            } catch (e) {}
             http.connect()
 
             def response = [:]
@@ -28,7 +29,6 @@ class MessageTool {
                 response = jsonSlurper.parseText(http.errorStream.getText('UTF-8'))
             }
             println("response:$response")
-
         } catch (e) {
             println(e)
         }
@@ -36,5 +36,6 @@ class MessageTool {
 
     static void main(String[] args) {
         def msgTool = new MessageTool();
+        msgTool.pushToFeiShu('ddd', 'new version updated')
     }
 }
